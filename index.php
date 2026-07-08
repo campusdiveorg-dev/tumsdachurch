@@ -1,5 +1,16 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
+$upcomingMission = null;
+try {
+    require_once 'db_connect.php';
+    $pdo = getPublicDB();
+    // Get upcoming mission
+    $stmt = $pdo->query("SELECT * FROM missions WHERE is_upcoming = 1 ORDER BY sort_order ASC LIMIT 1");
+    $upcomingMission = $stmt->fetch();
+} catch (Exception $e) {
+    // If database isn't set up yet, just use default content
+    $upcomingMission = null;
+}
 include 'header.php';
 ?>
 
@@ -156,8 +167,18 @@ include 'header.php';
 		<div class="homepage-mission-overlay">
 			<div class="homepage-mission-content">
 				<h2 class="homepage-mission-title">Upcoming Mission</h2>
-				<h1 class="homepage-mission-event">BALAGA Mission 2026</h1>
-				<p class="homepage-mission-description">Join us for our annual evangelical mission, and this year to Balaga from 21st December 2026 to 4th January 2026</p>
+				<?php if ($upcomingMission): ?>
+					<h1 class="homepage-mission-event"><?php echo htmlspecialchars($upcomingMission['title']); ?></h1>
+					<p class="homepage-mission-description">
+						<?php echo htmlspecialchars($upcomingMission['description']); ?>
+						<?php if ($upcomingMission['start_date'] && $upcomingMission['end_date']): ?>
+							<br>From <?php echo date('F j, Y', strtotime($upcomingMission['start_date'])); ?> to <?php echo date('F j, Y', strtotime($upcomingMission['end_date'])); ?>
+						<?php endif; ?>
+					</p>
+				<?php else: ?>
+					<h1 class="homepage-mission-event">Stay Tuned for Our Next Mission</h1>
+					<p class="homepage-mission-description">Check back soon for details on our upcoming evangelistic mission.</p>
+				<?php endif; ?>
 				<div class="homepage-mission-buttons">
 					<a href="evangelism.php#missionAccordion" class="homepage-mission-btn">Find More</a>
 					<button class="homepage-mission-btn support-btn">Support</button>

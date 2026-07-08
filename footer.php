@@ -64,10 +64,35 @@
 			<button class="popup-close" id="supportClose">&times;</button>
 			<div class="popup-content">
 				<h3>Support</h3>
-				<p>Little is much when God is in it. Support our mission to Challa through:</p>
-				<p class="support-details"><strong>MPESA TILL NO: 3482464</strong></p>
-				<p class="support-details"><strong>NAME: RHODA MUTANU</strong></p>
-				<p><strong>Thank You! May God Bless You Abundantly!</strong></p>
+				<p>Little is much when God is in it. Support our mission through M-Pesa STK Push:</p>
+				
+				<form id="mpesaForm" class="mt-3">
+					<div class="mb-3">
+						<label class="form-label">Phone Number (e.g. 254712345678)</label>
+						<input type="tel" name="phone" class="form-control" required placeholder="2547xxxxxxxx">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Amount (KES)</label>
+						<input type="number" name="amount" class="form-control" required min="1" placeholder="100">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Purpose</label>
+						<select name="purpose" class="form-select" required>
+							<option value="tithe">Tithe</option>
+							<option value="offering">Offering</option>
+							<option value="mission_support" selected>Mission Support</option>
+							<option value="other">Other</option>
+						</select>
+					</div>
+					<div id="mpesaMessage" class="alert d-none"></div>
+					<button type="submit" class="btn btn-primary w-100">Send STK Push</button>
+				</form>
+				
+				<div class="mt-4 text-muted small">
+					<p>Or use Till Number: <strong>3482464</strong> (Name: RHODA MUTANU)</p>
+				</div>
+				
+				<p class="mt-3"><strong>Thank You! May God Bless You Abundantly!</strong></p>
 			</div>
 		</div>
 	</div>

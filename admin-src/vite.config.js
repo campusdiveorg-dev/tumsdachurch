@@ -1,0 +1,51 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig(({ command }) => {
+  const isProd = command === 'build';
+  return {
+    plugins: [react()],
+    base: isProd ? '/tumsda.org/admin/' : '/',
+    build: {
+      outDir: '../admin',
+      emptyOutDir: true,
+    },
+    server: {
+      port: 5173,
+      proxy: {
+        '/api': {
+          target: 'http://localhost',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '/tumsda.org/api'),
+          configure: (proxy, options) => {
+            proxy.on('proxyReq', (proxyReq, req, res) => {
+              console.log('Proxying request:', proxyReq.path);
+            });
+          },
+        },
+        '/tumsda.org/assets': {
+          target: 'http://localhost',
+          changeOrigin: true,
+          secure: false,
+          configure: (proxy, options) => {
+            proxy.on('proxyReq', (proxyReq, req, res) => {
+              console.log('Proxying asset request:', proxyReq.path);
+            });
+          },
+        },
+        '/tumsda.org/webfonts': {
+          target: 'http://localhost',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/webfonts': {
+          target: 'http://localhost',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => `/tumsda.org${path}`,
+        },
+      },
+    },
+  }
+})

@@ -1,0 +1,26 @@
+# Environment variables
+.env
+
+# Node modules (for admin SPA)
+admin-src/node_modules/
+admin-src/.npm/
+admin-src/.yarn/
+
+# Build output
+admin/*
+!admin/.htaccess
+
+# Log files
+*.log
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

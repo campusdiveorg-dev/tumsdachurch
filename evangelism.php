@@ -1,5 +1,14 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
+$missions = [];
+try {
+    require_once 'db_connect.php';
+    $pdo = getPublicDB();
+    $stmt = $pdo->query("SELECT * FROM missions ORDER BY sort_order ASC");
+    $missions = $stmt->fetchAll();
+} catch (Exception $e) {
+    $missions = [];
+}
 include 'header.php';
 ?>
 
@@ -8,7 +17,7 @@ include 'header.php';
 	<div class="evangelism-hero-container">
 		<div class="evangelism-hero-overlay">
 			<div class="evangelism-hero-content">
-				<h1 class="evangelism-hero-title">Evangelism & Missions</h1>
+				<h1 class="evangelism-hero-title">Evangelism &amp; Missions</h1>
 				<p class="evangelism-hero-subtitle">Spreading the Gospel through dedicated missionary work and community outreach</p>
 				<blockquote class="evangelism-verse">
 					<p>"And this gospel of the kingdom will be preached in all the world as a witness to all the nations, and then the end will come."</p>
@@ -88,76 +97,105 @@ include 'header.php';
 			<div class="col-lg-10">
 				<h2 class="mission-history-title">Our Mission History</h2>
 				<p class="mission-history-subtitle">Discover the impact of our evangelistic missions through the years</p>
-				<div class="accordion" id="missionAccordion">
-					<!-- UPCOMING CHALLA MISSION 2025 -->
-					<div class="accordion-item">
-						<h2 class="accordion-header" id="headingChalla2025">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChalla2025" aria-expanded="true" aria-controls="collapseChalla2025">
-								<span class="upcoming-indicator"></span>
-								<strong>UPCOMING BALAGA MISSION 2025</strong>
-							</button>
-						</h2>
-						<div id="collapseChalla2025" class="accordion-collapse collapse show" aria-labelledby="headingChalla2025" data-bs-parent="#missionAccordion">
-							<div class="accordion-body">
-								<!-- Balaga Mission 2026 Content -->
-								<div class="challa-mission-section">
-									<div class="challa-mission-container">
-										<div class="challa-mission-overlay">
-											<div class="container">
-												<!-- Mission Header -->
-												<div class="row justify-content-center mb-5">
-													<div class="col-lg-10 text-center">
-														<h2 class="challa-mission-title">Balaga Mission 2025</h2>
-														<div class="challa-mission-theme mb-4">
-														<h3 class="challa-theme-text">Jesus is Coming</h3>
-														<p class="challa-theme-verse">Revelation 22:12</p>
-														<p class="challa-theme-song">SDAH 442</p>
-														</div>
-														<div class="challa-mission-details-grid challa-mission-details-grid-single">
-															<div class="challa-detail-item">
-																<div class="challa-detail-content">
-																	<p>December 21, 2026 – January 4, 2026</p>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-									</div>
-									
-									<!-- Mission Description -->
-									<div class="mission-section bg-white">
-										<div class="container">
-											<div class="row justify-content-center mb-5">
-												<div class="col-lg-10">
-													<div class="mission-description-card">
-														<p class="lead">As part of our annual tradition, TUMSDA will be heading out for a two-week evangelistic mission in Challa, Taita Taveta County, bringing the everlasting gospel to new communities and providing spiritual and practical aid where needed.</p>
-													</div>
-												</div>
-											</div>
-										
-										<!-- Call to Action -->
-										<div class="row justify-content-center mb-5">
-											<div class="col-lg-8 text-center">
-												<div class="mission-call-to-action">
-													<h3>Join Us in This Mission</h3>
-													<p>We warmly invite every member and friend of TUMSDA to take part in this mission, whether by going with us physically, giving in support (financial or material), or standing with us in prayer.</p>
-													<div class="mission-cta">
-														<a href="https://whatsapp.com/channel/0029Vb5zZEjBKfi4xoxGlI25" target="_blank" class="btn btn-outline-primary btn-sm me-2">Join Us</a>
-														<button class="btn btn-outline-primary btn-sm me-2 support-btn">Support</button>
-														<button class="btn btn-outline-primary btn-sm mission-chair-btn">Mission Chair</button>
-													</div>
-												</div>
-											</div>
+
+				<div class="mission-accordion" id="missionAccordion">
+					<?php foreach ($missions as $index => $mission): ?>
+					<div class="mission-accordion-item <?php echo $index === 0 ? 'active' : ''; ?>">
+
+						<!-- Accordion Header / Toggle -->
+						<button
+							class="mission-accordion-header"
+							type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#collapseMission<?php echo $index; ?>"
+							aria-expanded="<?php echo $index === 0 ? 'true' : 'false'; ?>"
+							aria-controls="collapseMission<?php echo $index; ?>"
+						>
+							<span class="mission-accordion-left">
+								<?php if ($mission['is_upcoming']): ?>
+									<span class="mission-badge upcoming">UPCOMING</span>
+								<?php else: ?>
+									<span class="mission-badge past">PAST</span>
+								<?php endif; ?>
+								<span class="mission-accordion-title"><?php echo htmlspecialchars($mission['title']); ?></span>
+							</span>
+							<?php if ($mission['start_date'] && $mission['end_date']): ?>
+							<span class="mission-accordion-date">
+								<i class="fas fa-calendar-alt me-1"></i>
+								<?php echo date('M Y', strtotime($mission['start_date'])); ?> – <?php echo date('M Y', strtotime($mission['end_date'])); ?>
+							</span>
+							<?php endif; ?>
+							<span class="mission-accordion-chevron"><i class="fas fa-chevron-down"></i></span>
+						</button>
+
+						<!-- Accordion Body -->
+						<div id="collapseMission<?php echo $index; ?>" class="accordion-collapse collapse <?php echo $index === 0 ? 'show' : ''; ?>" data-bs-parent="#missionAccordion">
+							<div class="mission-accordion-body">
+
+								<!-- Theme Banner -->
+								<?php if ($mission['theme_text'] || $mission['theme_verse'] || $mission['theme_song']): ?>
+								<div class="mission-theme-banner">
+									<div class="mission-theme-inner">
+										<h3 class="mission-theme-title"><?php echo htmlspecialchars($mission['title']); ?></h3>
+										<?php if ($mission['theme_text']): ?>
+										<p class="mission-theme-text"><?php echo htmlspecialchars($mission['theme_text']); ?></p>
+										<?php endif; ?>
+										<div class="mission-theme-meta">
+											<?php if ($mission['theme_verse']): ?>
+											<span class="mission-meta-tag"><i class="fas fa-book-open me-1"></i><?php echo htmlspecialchars($mission['theme_verse']); ?></span>
+											<?php endif; ?>
+											<?php if ($mission['theme_song']): ?>
+											<span class="mission-meta-tag"><i class="fas fa-music me-1"></i><?php echo htmlspecialchars($mission['theme_song']); ?></span>
+											<?php endif; ?>
+											<?php if ($mission['start_date'] && $mission['end_date']): ?>
+											<span class="mission-meta-tag"><i class="fas fa-calendar-alt me-1"></i><?php echo date('F j', strtotime($mission['start_date'])); ?> – <?php echo date('F j, Y', strtotime($mission['end_date'])); ?></span>
+											<?php endif; ?>
 										</div>
 									</div>
 								</div>
+								<?php endif; ?>
+
+								<!-- Description -->
+								<?php if ($mission['description']): ?>
+								<div class="mission-description-section">
+									<div class="mission-description-card">
+										<div class="mission-desc-icon"><i class="fas fa-globe-africa"></i></div>
+										<p><?php echo htmlspecialchars($mission['description']); ?></p>
+									</div>
+								</div>
+								<?php endif; ?>
+
+								<!-- Call to Action (upcoming missions only) -->
+								<?php if ($mission['is_upcoming']): ?>
+								<div class="mission-cta-section">
+									<div class="mission-cta-card">
+										<div class="mission-cta-icon"><i class="fas fa-hands-helping"></i></div>
+										<h4>Join Us in This Mission</h4>
+										<p>We warmly invite every member and friend of TUMSDA to take part in this mission — whether by going with us physically, giving in support (financial or material), or standing with us in prayer.</p>
+										<div class="mission-cta-buttons">
+											<a href="https://whatsapp.com/channel/0029Vb5zZEjBKfi4xoxGlI25" target="_blank" class="btn-mission primary">
+												<i class="fab fa-whatsapp me-2"></i>Join Us
+											</a>
+											<button class="btn-mission outline support-btn">
+												<i class="fas fa-hand-holding-heart me-2"></i>Support
+											</button>
+											<button class="btn-mission outline mission-chair-btn">
+												<i class="fas fa-user-tie me-2"></i>Mission Chair
+											</button>
+										</div>
+									</div>
+								</div>
+								<?php endif; ?>
+
 							</div>
 						</div>
 					</div>
+					<?php endforeach; ?>
 				</div>
+
 			</div>
 		</div>
+	</div>
 </section>
 
 <?php include 'footer.php'; ?>

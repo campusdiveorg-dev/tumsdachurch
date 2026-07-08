@@ -221,4 +221,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	initPopupCards();
 
+	// M-Pesa STK Push Form Handler
+	const mpesaForm = document.getElementById('mpesaForm');
+	const mpesaMessage = document.getElementById('mpesaMessage');
+	if (mpesaForm) {
+		mpesaForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const formData = new FormData(mpesaForm);
+			const data = {
+				phone: formData.get('phone'),
+				amount: Number(formData.get('amount')),
+				purpose: formData.get('purpose')
+			};
+			
+			mpesaMessage.textContent = 'Processing...';
+			mpesaMessage.className = 'alert alert-info d-block';
+			
+			try {
+				const response = await fetch('/api/payments/initiate', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(data)
+				});
+				const result = await response.json();
+				
+				if (result.success) {
+					mpesaMessage.textContent = 'STK Push sent! Please check your phone.';
+					mpesaMessage.className = 'alert alert-success d-block';
+					mpesaForm.reset();
+				} else {
+					mpesaMessage.textContent = result.error || 'Failed to send STK Push.';
+					mpesaMessage.className = 'alert alert-danger d-block';
+				}
+			} catch (error) {
+				mpesaMessage.textContent = 'Network error. Please try again.';
+				mpesaMessage.className = 'alert alert-danger d-block';
+			}
+		});
+	}
+
 });

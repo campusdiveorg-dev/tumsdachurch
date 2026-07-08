@@ -1,5 +1,15 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
+$leaders = [];
+try {
+    require_once 'db_connect.php';
+    $pdo = getPublicDB();
+    // Get leadership
+    $stmt = $pdo->query("SELECT * FROM leadership ORDER BY sort_order ASC");
+    $leaders = $stmt->fetchAll();
+} catch (Exception $e) {
+    $leaders = [];
+}
 include 'header.php';
 ?>
 
@@ -18,53 +28,27 @@ include 'header.php';
 		</div>
 		
 		<div class="row g-4 justify-content-center">
+			<?php foreach ($leaders as $leader): ?>
 			<div class="col-lg-4">
 				<div class="leadership-card">
+					<?php if ($leader['photo_path']): ?>
 					<div class="leadership-image">
-						<img src="assets/img/Cephas.jpg" alt="Elder Hosea Chesigor" class="leadership-photo">
+						<img src="<?php echo htmlspecialchars($leader['photo_path']); ?>" alt="<?php echo htmlspecialchars($leader['name']); ?>" class="leadership-photo">
 					</div>
+					<?php endif; ?>
 					<div class="leadership-content">
-						<h4 class="leadership-name">Elder Cephas Mukaria</h4>
-						<p class="leadership-position">Chairperson, 1st Elder</p>
+						<h4 class="leadership-name"><?php echo htmlspecialchars($leader['name']); ?></h4>
+						<p class="leadership-position"><?php echo htmlspecialchars($leader['position']); ?></p>
+						<?php if ($leader['statement']): ?>
 						<blockquote class="leadership-statement">
-							This is a faithful saying that in TUMSDA, hearts are transformed, edified, and lives forever changed by Christ's radiant light.
+							<?php echo htmlspecialchars($leader['statement']); ?>
 						</blockquote>
-						<p class="leadership-signature">- Cephas Mukaria</p>
+						<p class="leadership-signature">- <?php echo htmlspecialchars(explode(' ', $leader['name'])[1] ?? $leader['name']); ?></p>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
-			
-			<div class="col-lg-4">
-				<div class="leadership-card">
-					<div class="leadership-image">
-						<img src="assets/img/jpg/Gibson.jpg" alt="Elder Gibson Kiprono" class="leadership-photo">
-					</div>
-					<div class="leadership-content">
-						<h4 class="leadership-name">Elder Gibson Kiprono</h4>
-						<p class="leadership-position">Assistant Chairperson, Personal Ministries, 2nd Elder</p>
-						<blockquote class="leadership-statement">
-							Just as Jesus's gentle arms, TUMSDA is a sweet haven of rest!
-						</blockquote>
-						<p class="leadership-signature">- Gibson Kiprono</p>
-					</div>
-				</div>
-			</div>
-			
-			<div class="col-lg-4">
-				<div class="leadership-card">
-					<div class="leadership-image">
-						<img src="assets/img/jpg/Daniel.jpg" alt="Elder Daniel Muchoge" class="leadership-photo">
-					</div>
-					<div class="leadership-content">
-						<h4 class="leadership-name">Elder Daniel Muchoge</h4>
-						<p class="leadership-position">Assistant Chairperson, Planning, 3rd Elder</p>
-						<blockquote class="leadership-statement">
-							TUMSDA, a home of watchmen and light bearers!
-						</blockquote>
-						<p class="leadership-signature">- Daniel Muchoge</p>
-					</div>
-				</div>
-			</div>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </section>

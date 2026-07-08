@@ -1,6 +1,28 @@
 <?php
 // about.php — now uses shared header/footer
 $currentPage = basename($_SERVER['PHP_SELF']);
+$weeklyMeetings = [];
+$meetingsByDay = [];
+$events = [];
+try {
+    require_once 'db_connect.php';
+    $pdo = getPublicDB();
+    // Get weekly meetings
+    $stmt = $pdo->query("SELECT * FROM weekly_meetings ORDER BY sort_order ASC");
+    $weeklyMeetings = $stmt->fetchAll();
+    // Group weekly meetings by day
+    foreach ($weeklyMeetings as $meeting) {
+        $meetingsByDay[$meeting['day_of_week']][] = $meeting;
+    }
+    // Get events
+    $stmt = $pdo->query("SELECT * FROM events ORDER BY event_date ASC");
+    $events = $stmt->fetchAll();
+} catch (Exception $e) {
+    // If database not set up, use empty arrays
+    $weeklyMeetings = [];
+    $meetingsByDay = [];
+    $events = [];
+}
 include 'header.php';
 ?>
 
@@ -107,30 +129,24 @@ include 'header.php';
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td rowspan="4">Sunday</td>
-						<tr><td>4:00–6:00 PM</td><td>Medical Missionary Training</td></tr>
-						<tr><td>4:00–6:00 PM</td><td>Church Choir Training</td></tr>
-						<tr><td>6:00–8:00 PM</td><td>HOP Training</td></tr>
-						<tr><td rowspan="4">Monday</td>
-						<tr><td>4:30–5:30 PM</td><td>Jewels' Meeting</td></tr>
-						<tr><td>5:30–6:30 PM</td><td>BBA Ministry</td></tr>
-						<tr><td>6:30–7:30 PM</td><td>Amazing Grace Ministry</td></tr>
-						<tr><td rowspan="4">Tuesday</td>
-						<tr><td>4:30–5:30 PM</td><td>Evangelism</td></tr>
-						<tr><td>5:30–6:30 PM</td><td>BBA Ministry</td></tr>
-						<tr><td>6:30–7:30 PM</td><td>Amazing Grace Ministry</td></tr>
-						<tr><td rowspan="4">Wednesday</td>
-						<tr><td>4:30–5:30 PM</td><td>AMO / ALO Meetings</td></tr>
-						<tr><td>5:30–6:30 PM</td><td>BBA Ministry</td></tr>
-						<tr><td>6:30–7:30 PM</td><td>Amazing Grace Ministry</td></tr>
-						<tr><td rowspan="4">Thursday</td>
-						<tr><td>4:30–5:30 PM</td><td>Church Choir Training</td></tr>
-						<tr><td>5:30–6:30 PM</td><td>BBA Training</td></tr>
-						<tr><td>6:30–7:30 PM</td><td>HOP Training</td></tr>
-						<tr><td rowspan="2">Friday</td>
-						<tr><td>5:30–7:30 PM</td><td>Vespers</td></tr>
-						<tr><td rowspan="2">Saturday</td>
-						<tr><td>8:00 AM–6:00 PM</td><td>Sabbath Program</td></tr>
+						<?php 
+						$dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+						foreach ($dayOrder as $day): 
+							if (!isset($meetingsByDay[$day])) continue;
+							$meetings = $meetingsByDay[$day];
+							$rowspan = count($meetings);
+							$first = true;
+						?>
+							<?php foreach ($meetings as $meeting): ?>
+								<tr>
+									<?php if ($first): ?>
+										<td rowspan="<?php echo $rowspan; ?>"><?php echo htmlspecialchars($day); ?></td>
+									<?php $first = false; endif; ?>
+									<td><?php echo htmlspecialchars($meeting['time_range']); ?></td>
+									<td><?php echo htmlspecialchars($meeting['program_name']); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endforeach; ?>
 					</tbody>
 				</table>
 			</div>
@@ -150,106 +166,13 @@ include 'header.php';
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>2025-09-06</td>
-						<td>Second Coming Sabbath</td>
-						<td>Drezzillah Ellidah</td>
-					</tr>
-					<tr>
-						<td>2025-09-13</td>
-						<td>Prayer and Fasting Sabbath</td>
-						<td>Derrick Onyango</td>
-					</tr>
-					<tr>
-						<td>2025-09-20</td>
-						<td>Holy Communion</td>
-						<td>Ziwani SDA</td>
-					</tr>
-					<tr>
-						<td>2025-09-27</td>
-						<td>True Education Sabbath</td>
-						<td>Lovine Lucas</td>
-					</tr>
-					<tr>
-						<td>2025-09-28</td>
-						<td>Jewels’ Week (Sep 28 – Oct 4)</td>
-						<td>Jewel’s Leader</td>
-					</tr>
-					<tr>
-						<td>2025-10-04</td>
-						<td>Jewels’ Sabbath</td>
-						<td>Amos Wangwe</td>
-					</tr>
-					<tr>
-						<td>2025-10-05</td>
-						<td>ALUMNI Week (Oct 5 – Oct 11)</td>
-						<td>ALUMNI</td>
-					</tr>
-					<tr>
-						<td>2025-10-11</td>
-						<td>ALUMNI Sabbath</td>
-						<td>ALUMNI</td>
-					</tr>
-					<tr>
-						<td>2025-10-18</td>
-						<td>Sanctuary Sabbath</td>
-						<td>Hosea Chesigor</td>
-					</tr>
-					<tr>
-						<td>2025-10-25</td>
-						<td>CUCASO</td>
-						<td>CUCASO</td>
-					</tr>
-					<tr>
-						<td>2025-11-01</td>
-						<td>Music Sabbath</td>
-						<td>Justice Nyaga</td>
-					</tr>
-					<tr>
-						<td>2025-11-08</td>
-						<td>Publishing Sabbath</td>
-						<td>Barack K'Owili</td>
-					</tr>
-					<tr>
-						<td>2025-11-15</td>
-						<td>Country Living Sabbath</td>
-						<td>Kinya Mogaka</td>
-					</tr>
-					<tr>
-						<td>2025-11-22</td>
-						<td>ALO Sabbath</td>
-						<td>Ravine Owiti</td>
-					</tr>
-					<tr>
-						<td>2025-11-23</td>
-						<td>Medical Missionary Training Week (Nov 23 – Nov 29)</td>
-						<td>Medical Missionary Dept.</td>
-					</tr>
-					<tr>
-						<td>2025-11-29</td>
-						<td>Medical Missionary Sabbath</td>
-						<td>Jim Ayodo</td>
-					</tr>
-					<tr>
-						<td>2025-12-06</td>
-						<td>Sabbath School Emphasis</td>
-						<td>Caleb Omariba</td>
-					</tr>
-					<tr>
-						<td>2025-12-13</td>
-						<td>Sealing Sabbath</td>
-						<td>Warren Asher</td>
-					</tr>
-					<tr>
-						<td>2025-12-20</td>
-						<td>Holy Communion</td>
-						<td>Ziwani SDA</td>
-					</tr>
-					<tr>
-						<td>2025-12-21</td>
-						<td>Challa Mission 2025 (Dec 21 – Jan 4)</td>
-						<td>Mission Committee</td>
-					</tr>
+					<?php foreach ($events as $event): ?>
+						<tr>
+							<td><?php echo htmlspecialchars($event['event_date']); ?></td>
+							<td><?php echo htmlspecialchars($event['title']); ?></td>
+							<td><?php echo htmlspecialchars($event['facilitator'] ?? ''); ?></td>
+						</tr>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
