@@ -17,7 +17,7 @@ session_set_cookie_params([
     'path'     => '/',
     'secure'   => $isHttps,     // HTTPS only in production
     'httponly' => true,
-    'samesite' => 'Lax',
+    'samesite' => $isHttps ? 'None' : 'Lax',
 ]);
 session_name($sessionName);
 session_start();
