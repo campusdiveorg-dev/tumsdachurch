@@ -4,11 +4,14 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ command }) => {
   const isProd = command === 'build';
   const isVercel = !!process.env.VERCEL;
+  const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
+  const isStandaloneBuild = isVercel || isRailway;
+
   return {
     plugins: [react()],
-    base: isVercel ? '/' : (isProd ? '/tumsda.org/admin/' : '/'),
+    base: isStandaloneBuild ? '/' : (isProd ? '/tumsda.org/admin/' : '/'),
     build: {
-      outDir: isVercel ? 'dist' : '../admin',
+      outDir: isStandaloneBuild ? 'dist' : '../admin',
       emptyOutDir: true,
     },
     server: {
