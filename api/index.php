@@ -32,12 +32,28 @@ require_once __DIR__ . '/controllers/PaymentController.php';
 require_once __DIR__ . '/routes.php';
 
 // ── CORS Headers ───────────────────────────────────────────────────────────
-// Allow the admin SPA origin. Adjust if hosted on a separate subdomain.
+// Allow the admin SPA origin(s). Add new frontend deployment origins here,
+// or via the ADMIN_ORIGIN env var so we don't need a code change every time
+// the SPA moves to a new domain (e.g. Vercel preview URLs, Railway domains).
 $allowedOrigins = [
     'http://localhost:5173',      // Vite dev server
     rtrim($appUrl, '/') . '/admin',
     rtrim($appUrl, '/'),
+    'https://amused-delight-production-0916.up.railway.app', // Railway admin SPA
 ];
+
+// Optional: allow additional origins via env var (comma-separated) without
+// needing to redeploy code — e.g. ADMIN_ORIGIN=https://admin.tumsda.org
+$extraOrigins = $_ENV['ADMIN_ORIGIN'] ?? '';
+if ($extraOrigins !== '') {
+    foreach (explode(',', $extraOrigins) as $extra) {
+        $extra = rtrim(trim($extra), '/');
+        if ($extra !== '') {
+            $allowedOrigins[] = $extra;
+        }
+    }
+}
+
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, $allowedOrigins, true)) {
     header("Access-Control-Allow-Origin: $origin");
