@@ -1,7 +1,23 @@
 // Check if we're running in dev (Vite dev server) or production
-const isDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && 
+const isDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
               (window.location.port === '5173' || window.location.port === '5174');
-const API_BASE = import.meta.env.VITE_API_URL || (isDev ? '/api' : window.location.pathname.replace(/\/admin\/?$/, '/api'));
+
+let API_BASE;
+if (import.meta.env.VITE_API_URL) {
+  API_BASE = import.meta.env.VITE_API_URL;
+} else if (isDev) {
+  API_BASE = '/api';
+} else {
+  console.error(
+    '[api] VITE_API_URL is not set. In production the frontend cannot fall back to a ' +
+    'relative URL because the frontend and backend are on different domains. ' +
+    'Set the VITE_API_URL environment variable to the backend\'s full URL ' +
+    '(e.g. https://tumsdachurch-production.up.railway.app) and rebuild.'
+  );
+  // Assign an empty string so subsequent fetch calls fail with a clear network
+  // error rather than silently hitting the wrong origin.
+  API_BASE = '';
+}
 
 // Helper to get CSRF token
 export async function getCsrfToken() {
