@@ -11,6 +11,13 @@ function resolveRoute(string $method, array $segments): void {
                     isset($segments[1]) && is_numeric($segments[1]) ? (int) $segments[1] : null
                );
 
+    // ── DATABASE MIGRATION ROUTE ──────────────────────────────────────────
+    if ($ctrl === 'run_migration') {
+        require_once __DIR__ . '/run_migration.php';
+        return;
+    }
+
+
     // ── AUTH ──────────────────────────────────────────────────────────────
     if ($ctrl === 'auth') {
         $auth = new AuthController();
