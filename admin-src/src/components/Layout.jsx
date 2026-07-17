@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import logoImg from '../assets/logo.jpg'
 
 export default function Layout({ children }) {
   const { user, logout } = useAuth()
@@ -37,10 +38,6 @@ export default function Layout({ children }) {
     }
   }
 
-  // Get correct logo path for dev vs prod
-  const isDev = window.location.hostname === 'localhost' && (window.location.port === '5173' || window.location.port === '5174')
-  const logoPath = isDev ? '/tumsdachurch.org/assets/img/logo.jpg' : '../assets/img/logo.jpg'
-
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden relative">
       {/* Sidebar Backdrop Overlay on Mobile */}
@@ -60,7 +57,7 @@ export default function Layout({ children }) {
         {/* Sidebar Header */}
         <div className="p-6 border-b border-slate-800 bg-slate-950/30 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group" onClick={() => setIsSidebarOpen(false)}>
-            <img src={logoPath} alt="TUMSDA Logo" className="h-11 w-auto max-w-[60px] object-contain bg-white rounded-xl shadow-md border border-slate-800 p-0.5 group-hover:scale-105 transition-transform" />
+            <img src={logoImg} alt="TUMSDA Logo" className="h-11 w-auto max-w-[60px] object-contain bg-white rounded-xl shadow-md border border-slate-800 p-0.5 group-hover:scale-105 transition-transform" />
             <div className="flex flex-col">
               <span className="text-white font-extrabold text-lg tracking-wide" style={{ fontFamily: "'League Spartan', sans-serif" }}>TUMSDA Admin</span>
               <span className="text-slate-500 text-xs font-semibold" style={{ fontFamily: "'Inter', sans-serif" }}>Church Portal</span>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import logoImg from '../assets/logo.jpg'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -24,10 +25,6 @@ export default function Login() {
     }
   }
 
-  // Get correct logo path for dev vs prod
-  const isDev = window.location.hostname === 'localhost' && (window.location.port === '5173' || window.location.port === '5174')
-  const logoPath = isDev ? '/tumsdachurch.org/assets/img/logo.jpg' : '../assets/img/logo.jpg'
-
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative background grid and shapes */}
@@ -36,7 +33,7 @@ export default function Login() {
 
       <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 p-8 md:p-10 max-w-md w-full relative z-10 transition-all duration-300">
         <div className="text-center mb-8">
-          <img src={logoPath} alt="TUMSDA Logo" className="h-16 w-auto max-w-[200px] mx-auto mb-4 object-contain" />
+          <img src={logoImg} alt="TUMSDA Logo" className="h-16 w-auto max-w-[200px] mx-auto mb-4 object-contain" />
           <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight" style={{ fontFamily: "'League Spartan', sans-serif" }}>Welcome Back</h2>
           <p className="text-slate-500 mt-2 font-medium" style={{ fontFamily: "'Inter', sans-serif" }}>Login to your TUMSDA Admin account</p>
         </div>
