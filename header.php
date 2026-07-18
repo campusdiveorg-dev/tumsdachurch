@@ -3,6 +3,26 @@
 if (!isset($currentPage)) {
     $currentPage = basename($_SERVER['PHP_SELF']);
 }
+
+// ── Asset URL helper ───────────────────────────────────────────────────────
+// Returns a root-absolute URL for uploaded assets so images resolve correctly
+// regardless of which URL depth the browser is at (e.g. /leadership vs /admin).
+// On Railway (domain root):       asset_url('assets/img/x.jpg') → /assets/img/x.jpg
+// On WAMP subdirectory:           asset_url('assets/img/x.jpg') → /tum/tumsdachurch.org/assets/img/x.jpg
+// Set APP_BASE_PATH env var to the subdirectory prefix if needed (no trailing slash).
+if (!function_exists('asset_url')) {
+    function asset_url(string $path): string {
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+        static $base = null;
+        if ($base === null) {
+            $envBase = getenv('APP_BASE_PATH') ?: ($_ENV['APP_BASE_PATH'] ?? $_SERVER['APP_BASE_PATH'] ?? '');
+            $base = rtrim($envBase, '/');
+        }
+        return $base . '/' . ltrim($path, '/');
+    }
+}
 ?><!DOCTYPE html>
 <html lang="en">
 <head>

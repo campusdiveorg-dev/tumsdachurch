@@ -20,6 +20,19 @@ class ContentController {
         'word_of_the_day'=> ['content', 'reference'],
     ];
 
+    private static array $requiredFields = [
+        'departments'    => ['name'],
+        'ministries'     => ['name'],
+        'leadership'     => ['name', 'position'],
+        'sermons'        => ['title', 'youtube_url'],
+        'events'         => ['title', 'event_date'],
+        'weekly_meetings'=> ['day_of_week', 'time_range', 'program_name'],
+        'resources'      => ['title', 'link_url'],
+        'missions'       => ['title'],
+        'announcements'  => ['title', 'content'],
+        'word_of_the_day'=> ['content', 'reference'],
+    ];
+
     // GET /api/{table}
     public function list(string $table): void {
         $this->validateTable($table);
@@ -63,6 +76,15 @@ class ContentController {
 
         $this->validateTable($table);
         $body   = getRequestBody();
+
+        $required = self::$requiredFields[$table] ?? [];
+        foreach ($required as $field) {
+            if (!isset($body[$field]) || (is_string($body[$field]) && trim($body[$field]) === '')) {
+                $fieldName = ucwords(str_replace('_', ' ', $field));
+                jsonError("Field '$fieldName' is required and cannot be empty.", 400);
+            }
+        }
+
         $fields = self::$allowedTables[$table];
         $data   = $this->filterBody($body, $fields);
 
@@ -92,6 +114,15 @@ class ContentController {
 
         $this->validateTable($table);
         $body   = getRequestBody();
+
+        $required = self::$requiredFields[$table] ?? [];
+        foreach ($required as $field) {
+            if (!isset($body[$field]) || (is_string($body[$field]) && trim($body[$field]) === '')) {
+                $fieldName = ucwords(str_replace('_', ' ', $field));
+                jsonError("Field '$fieldName' is required and cannot be empty.", 400);
+            }
+        }
+
         $fields = self::$allowedTables[$table];
         $data   = $this->filterBody($body, $fields);
 

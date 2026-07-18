@@ -33,7 +33,7 @@ include 'header.php';
 				<div class="leadership-card">
 					<?php if ($leader['photo_path']): ?>
 					<div class="leadership-image">
-						<img src="<?php echo htmlspecialchars($leader['photo_path']); ?>" alt="<?php echo htmlspecialchars($leader['name']); ?>" class="leadership-photo">
+						<img src="<?php echo htmlspecialchars(asset_url($leader['photo_path'])); ?>" alt="<?php echo htmlspecialchars($leader['name']); ?>" class="leadership-photo">
 					</div>
 					<?php endif; ?>
 					<div class="leadership-content">

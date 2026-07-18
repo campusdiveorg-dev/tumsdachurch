@@ -114,6 +114,13 @@ function resolveRoute(string $method, array $segments): void {
         $dest = $uploadDir . '/' . $filename;
         
         if (move_uploaded_file($file['tmp_name'], $dest)) {
+            $cloudinaryUrl = uploadToCloudinary($dest);
+            if ($cloudinaryUrl) {
+                @unlink($dest); // Clean up local file
+                jsonResponse([
+                    'url' => $cloudinaryUrl
+                ]);
+            }
             jsonResponse([
                 'url' => 'assets/img/uploads/' . $filename
             ]);

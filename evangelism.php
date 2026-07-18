@@ -138,12 +138,12 @@ include 'header.php';
 								<?php if ($mission['theme_text'] || $mission['theme_verse'] || $mission['theme_song']): ?>
 								<div class="mission-theme-banner" style="position: relative; overflow: hidden;">
 									<?php if ($mission['logo_path']): ?>
-										<img src="<?php echo htmlspecialchars($mission['logo_path']); ?>" alt="Mission Logo" class="d-none d-md-block position-absolute end-0 top-0 m-4 shadow-sm rounded-3 bg-white p-2" style="max-height: 60px; max-width: 120px; object-fit: contain; z-index: 10; border: 1px solid rgba(0,0,0,0.05);" onError="this.style.display='none'">
+										<img src="<?php echo htmlspecialchars(asset_url($mission['logo_path'])); ?>" alt="Mission Logo" class="d-none d-md-block position-absolute end-0 top-0 m-4 shadow-sm rounded-3 bg-white p-2" style="max-height: 60px; max-width: 120px; object-fit: contain; z-index: 10; border: 1px solid rgba(0,0,0,0.05);" onError="this.style.display='none'">
 									<?php endif; ?>
 									<div class="mission-theme-inner">
 										<div class="d-flex align-items-center gap-3 mb-2 flex-wrap">
 											<?php if ($mission['logo_path']): ?>
-												<img src="<?php echo htmlspecialchars($mission['logo_path']); ?>" alt="Mission Logo" class="d-block d-md-none shadow-sm rounded-3 bg-white p-1" style="max-height: 40px; max-width: 80px; object-fit: contain; border: 1px solid rgba(0,0,0,0.05);" onError="this.style.display='none'">
+												<img src="<?php echo htmlspecialchars(asset_url($mission['logo_path'])); ?>" alt="Mission Logo" class="d-block d-md-none shadow-sm rounded-3 bg-white p-1" style="max-height: 40px; max-width: 80px; object-fit: contain; border: 1px solid rgba(0,0,0,0.05);" onError="this.style.display='none'">
 											<?php endif; ?>
 											<h3 class="mission-theme-title m-0"><?php echo htmlspecialchars($mission['title']); ?></h3>
 										</div>

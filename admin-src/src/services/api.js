@@ -1,7 +1,16 @@
 // Check if we're running in dev (Vite dev server) or production
 const isDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && 
               (window.location.port === '5173' || window.location.port === '5174');
-const API_BASE = import.meta.env.VITE_API_URL || (isDev ? '/api' : window.location.pathname.replace(/\/admin\/?$/, '/api'));
+// VITE_BACKEND_URL: set this in Railway env vars to the PHP server URL,
+// e.g. https://tumsdachurch-production.up.railway.app
+// Leave unset on same-origin hosts (WAMP / shared hosting) where admin lives under /admin/
+const _backend = import.meta.env.VITE_BACKEND_URL
+  ? import.meta.env.VITE_BACKEND_URL.replace(/\/$/, '')
+  : null;
+const API_BASE = import.meta.env.VITE_API_URL
+  || (isDev ? '/api'
+    : _backend ? `${_backend}/api`
+    : window.location.pathname.replace(/\/admin\/?.*$/, '/api'));
 
 // Helper to get CSRF token
 export async function getCsrfToken() {

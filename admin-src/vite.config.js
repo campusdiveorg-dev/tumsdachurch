@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => {
 
   return {
     plugins: [react()],
-    base: isStandaloneBuild ? '/' : (isProd ? '/tumsda.org/admin/' : '/'),
+    base: isStandaloneBuild ? '/' : (isProd ? '/tum/tumsdachurch.org/admin/' : '/'),
     build: {
       outDir: isStandaloneBuild ? 'dist' : '../admin',
       emptyOutDir: true,

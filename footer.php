@@ -123,7 +123,7 @@
 				<div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
 					<h3 class="m-0" style="font-family: 'League Spartan', sans-serif; font-weight: 700; color: var(--brand);">Mission Chair Message</h3>
 					<?php if ($upcomingMission && $upcomingMission['logo_path']): ?>
-						<img src="<?php echo htmlspecialchars($upcomingMission['logo_path']); ?>" alt="Mission Logo" style="max-height: 40px; max-width: 100px; object-fit: contain;" onError="this.style.display='none'">
+						<img src="<?php echo htmlspecialchars(asset_url($upcomingMission['logo_path'])); ?>" alt="Mission Logo" style="max-height: 40px; max-width: 100px; object-fit: contain;" onError="this.style.display='none'">
 					<?php endif; ?>
 				</div>
 				<div class="mission-chair-message" style="font-family: 'Cambria', serif; line-height: 1.6; color: #475569;">
@@ -133,7 +133,7 @@
 				</div>
 				<div class="mission-chair-signature mt-4 pt-3 border-top d-flex align-items-center gap-3">
 					<?php if ($upcomingMission && $upcomingMission['chair_photo_path']): ?>
-						<img src="<?php echo htmlspecialchars($upcomingMission['chair_photo_path']); ?>" alt="Mission Chair" class="rounded-circle border shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" onError="this.src='assets/img/avatar.png'">
+						<img src="<?php echo htmlspecialchars(asset_url($upcomingMission['chair_photo_path'])); ?>" alt="Mission Chair" class="rounded-circle border shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" onError="this.src='<?php echo asset_url('assets/img/avatar.png'); ?>'">
 					<?php else: ?>
 						<div class="rounded-circle bg-light border d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px; color: #64748b;"><i class="fas fa-user-tie"></i></div>
 					<?php endif; ?>

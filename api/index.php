@@ -24,6 +24,7 @@ session_start();
 
 // ── Autoload other files ───────────────────────────────────────────────────
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/config/cloudinary.php';
 require_once __DIR__ . '/middleware/RequireAuth.php';
 require_once __DIR__ . '/controllers/AuthController.php';
 require_once __DIR__ . '/controllers/ContentController.php';

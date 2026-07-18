@@ -34,7 +34,7 @@ include 'header.php';
 						<div>
 							<h5 class="card-title mb-3 d-flex align-items-center gap-2">
 								<?php if ($dept['logo_path']): ?>
-									<img src="<?php echo htmlspecialchars($dept['logo_path']); ?>" alt="Logo" class="rounded-circle border shadow-sm" style="width: 32px; height: 32px; object-fit: cover;" onError="this.style.display='none'">
+									<img src="<?php echo htmlspecialchars(asset_url($dept['logo_path'])); ?>" alt="Logo" class="rounded-circle border shadow-sm" style="width: 32px; height: 32px; object-fit: cover;" onError="this.style.display='none'">
 								<?php endif; ?>
 								<span><?php echo htmlspecialchars($dept['name']); ?></span>
 							</h5>
@@ -64,7 +64,7 @@ include 'header.php';
 							<div class="mt-3 pt-3 border-top d-flex align-items-center justify-content-between">
 								<div class="d-flex align-items-center gap-2">
 									<?php if ($dept['chair_photo_path']): ?>
-										<img src="<?php echo htmlspecialchars($dept['chair_photo_path']); ?>" alt="<?php echo htmlspecialchars($dept['chair_name']); ?>" class="rounded-circle border shadow-sm" style="width: 36px; height: 36px; object-fit: cover;" onError="this.src='assets/img/avatar.png'">
+										<img src="<?php echo htmlspecialchars(asset_url($dept['chair_photo_path'])); ?>" alt="<?php echo htmlspecialchars($dept['chair_name']); ?>" class="rounded-circle border shadow-sm" style="width: 36px; height: 36px; object-fit: cover;" onError="this.src='<?php echo asset_url('assets/img/avatar.png'); ?>'">
 									<?php else: ?>
 										<div class="rounded-circle bg-light border d-flex align-items-center justify-content-center shadow-sm" style="width: 36px; height: 36px; color: #64748b;"><i class="fas fa-user-tie"></i></div>
 									<?php endif; ?>
@@ -74,7 +74,7 @@ include 'header.php';
 									</div>
 								</div>
 								<?php if ($dept['logo_path']): ?>
-									<img src="<?php echo htmlspecialchars($dept['logo_path']); ?>" alt="Department Logo" style="max-height: 28px; max-width: 80px; object-fit: contain;" onError="this.style.display='none'">
+									<img src="<?php echo htmlspecialchars(asset_url($dept['logo_path'])); ?>" alt="Department Logo" style="max-height: 28px; max-width: 80px; object-fit: contain;" onError="this.style.display='none'">
 								<?php endif; ?>
 							</div>
 							<?php endif; ?>

@@ -2,13 +2,24 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { contentApi, uploadFile } from '../services/api'
 
-// Image path resolver — handles Vite dev proxy vs built /admin/ production path
+// Image path resolver — works for:
+//  • Vite dev server (proxy)
+//  • Same-origin production (WAMP / shared host: PHP + admin on same domain)
+//  • Cross-origin production (e.g. Railway: admin SPA on different subdomain)
+//
+// Set VITE_BACKEND_URL in Railway environment variables to the PHP backend URL,
+// e.g.  VITE_BACKEND_URL=https://tumsdachurch-production.up.railway.app
 const _isDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
                (window.location.port === '5173' || window.location.port === '5174')
+const _backendUrl = import.meta.env.VITE_BACKEND_URL
+  ? import.meta.env.VITE_BACKEND_URL.replace(/\/$/, '')  // strip trailing slash
+  : ''                                                     // empty = same origin
 function imgSrc(path) {
   if (!path) return ''
   if (path.startsWith('http')) return path
-  return _isDev ? `/tumsdachurch.org/${path}` : `../${path}`
+  if (_isDev) return `/tumsdachurch.org/${path}`
+  // On production: prefix with backend base URL (absolute) or root-relative
+  return `${_backendUrl}/${path}`
 }
 
 const fieldsConfig = {
@@ -125,7 +136,7 @@ export default function ContentPage() {
       cancelEdit()
       loadItems()
     } catch (err) {
-      setError(err.message || 'An error occurred while saving.')
+      setError(err.error || err.message || 'An error occurred while saving.')
     }
   }
 
@@ -138,7 +149,7 @@ export default function ContentPage() {
         setSuccess('Item deleted successfully.')
         loadItems()
       } catch (err) {
-        setError(err.message || 'Failed to delete item.')
+        setError(err.error || err.message || 'Failed to delete item.')
       }
     }
   }
